@@ -10,6 +10,7 @@ This is a free browser-based stop motion animation tool created for cartoon love
 -----------------------------------------
 - 🖱️ **Draggable Frames** – Reorder your frames directly in the timeline by dragging and dropping.  
 - 👻 **Onion Skinning (Multi-Layer)** – Overlay previous and/or next frames on top of your live camera feed to help align movement more precisely.  
+- 🌙 **Dark Mode** – A sleek dark theme to make animating easier on the eyes.  
 - ⚡ General improvements and fixes to keep animations smooth and easy.  
 
 -----------------------------------------
@@ -19,6 +20,7 @@ This is a free browser-based stop motion animation tool created for cartoon love
 - Visual playback side-by-side with your live camera feed.
 - Timeline UI to view, duplicate, delete, or reorder frames.
 - Onion Skin toggle (previous, next, or both).
+- Dark Mode for reduced eye strain.
 - Add an audio track for animating in sync with sound.
 - Adjustable FPS (frames per second) with a live number indicator.
 - Save & load projects in .json format (keeps frames, FPS, and audio filename).
@@ -35,13 +37,14 @@ This is a free browser-based stop motion animation tool created for cartoon love
    - Duplicate (⧉), Delete (✕), or Drag to reorder frames.
 4. Turn Onion Skin on/off in the controls:
    - Choose to overlay the previous frame, next frame, or both.
-5. Adjust FPS with the slider to control playback speed.
-6. (Optional) Add an audio file to animate in sync with sound.
-7. Press "Play" to preview your animation with audio.
-8. Press "Stop" to reset playback.
-9. Use "Save Project" to store your work as a .json file.
-10. Use "Load Project" to continue working later.
-11. Export your animation as a WebM video when finished!
+5. Toggle Dark Mode in the UI to switch between light and dark themes.
+6. Adjust FPS with the slider to control playback speed.
+7. (Optional) Add an audio file to animate in sync with sound.
+8. Press "Play" to preview your animation with audio.
+9. Press "Stop" to reset playback.
+10. Use "Save Project" to store your work as a .json file.
+11. Use "Load Project" to continue working later.
+12. Export your animation as a WebM video when finished!
 
 -----------------------------------------
    REQUIREMENTS
@@ -68,8 +71,5 @@ Created with love and silliness by Marz. 💫
 Enjoy making your cartoons silly again!
 
 
-
-
-Marz’s SillyMotion was created by Marz (idea, design, and direction) with coding support from ChatGPT (implementation and technical help).
+Marz’s SillyMotion was created by Marz (idea, design, and direction) with coding support from ChatGPT (implementation and technical help).  
 This project is a labor of love to keep cartoon-making fun, free, and accessible to everyone. 🎬✨
-
