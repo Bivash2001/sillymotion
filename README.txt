@@ -56,3 +56,9 @@ This project is free to use, modify, and share.
 Created with love and silliness by Marz. 💫
 
 Enjoy making your cartoons silly again!
+
+
+
+
+Marz’s SillyMotion was created by Marz (idea, design, and direction) with coding support from ChatGPT (implementation and technical help).
+This project is a labor of love to keep cartoon-making fun, free, and accessible to everyone. 🎬✨
