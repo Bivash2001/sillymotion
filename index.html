@@ -7,7 +7,8 @@
     body { font-family: sans-serif; margin: 20px; }
     #controls { margin: 10px 0; }
     #timeline { display: flex; overflow-x: auto; border: 1px solid #ccc; padding: 5px; min-height: 100px; }
-    .frame-thumb { margin: 2px; border: 1px solid #999; cursor: pointer; position: relative; }
+    .frame-thumb { margin: 2px; border: 1px solid #999; cursor: grab; position: relative; }
+    .frame-thumb.dragging { opacity: 0.5; }
     .frame-thumb img { width: 60px; height: 45px; display: block; }
     .selected { border: 2px solid red; }
     .frame-actions { display: flex; justify-content: center; margin-top: 2px; }
@@ -20,7 +21,9 @@
 
   <div style="display:flex; gap:20px;">
     <div>
-      <video id="webcam" autoplay playsinline width="320" height="240"></video>
+      <h3>Camera Feed (Be Sure to Grab a Webcam)</h3>
+      <canvas id="liveCanvas" width="320" height="240" style="border:1px solid #ccc;"></canvas>
+      <video id="webcam" autoplay playsinline width="320" height="240" style="display:none;"></video>
       <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
     </div>
     <div>
@@ -43,6 +46,14 @@
       <input type="range" id="fpsSlider" min="1" max="30" value="6">
       <span id="fpsValue">6</span>
     </label>
+    <label>
+      <input type="checkbox" id="onionSkin"> Onion Skin
+    </label>
+    <select id="onionMode">
+      <option value="previous">Previous Frame</option>
+      <option value="next">Next Frame</option>
+      <option value="both">Previous + Next</option>
+    </select>
   </div>
 
   <audio id="audio" controls></audio>
@@ -50,6 +61,8 @@
 
   <script>
     const video = document.getElementById("webcam");
+    const liveCanvas = document.getElementById("liveCanvas");
+    const liveCtx = liveCanvas.getContext("2d");
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
     const captureBtn = document.getElementById("captureBtn");
@@ -62,6 +75,8 @@
     const audioInput = document.getElementById("audioInput");
     const timeline = document.getElementById("timeline");
     const playbackPreview = document.getElementById("playbackPreview");
+    const onionSkinToggle = document.getElementById("onionSkin");
+    const onionMode = document.getElementById("onionMode");
 
     const saveBtn = document.getElementById("saveBtn");
     const loadBtn = document.getElementById("loadBtn");
@@ -72,11 +87,47 @@
     let playing = false;
     let playInterval = null;
     let audioFilename = "";
+    let dragSrcIndex = null;
 
     // Webcam setup
     navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
       video.srcObject = stream;
+      requestAnimationFrame(drawLive);
     });
+
+// Live camera with onion skin (previous + next)
+function drawLive() {
+  // draw the live webcam feed
+  liveCtx.globalAlpha = 1.0;
+  liveCtx.drawImage(video, 0, 0, liveCanvas.width, liveCanvas.height);
+
+  if (onionSkinToggle.checked && frames.length > 0) {
+    const alphaStep = 0.3; // transparency for onion layers
+    const prevIndex = currentFrame - 1;
+    const nextIndex = currentFrame + 1;
+
+    // draw previous frame (if exists)
+    if (prevIndex >= 0) {
+      const prevImg = new Image();
+      prevImg.src = frames[prevIndex];
+      liveCtx.globalAlpha = alphaStep;
+      liveCtx.drawImage(prevImg, 0, 0, liveCanvas.width, liveCanvas.height);
+    }
+
+    // draw next frame (if exists)
+    if (nextIndex < frames.length) {
+      const nextImg = new Image();
+      nextImg.src = frames[nextIndex];
+      liveCtx.globalAlpha = alphaStep;
+      liveCtx.drawImage(nextImg, 0, 0, liveCanvas.width, liveCanvas.height);
+    }
+
+    liveCtx.globalAlpha = 1.0; // reset
+  }
+
+  requestAnimationFrame(drawLive);
+}
+
 
     // FPS slider value display
     fpsSlider.addEventListener("input", () => {
@@ -91,12 +142,13 @@
       renderTimeline();
     });
 
-    // Timeline renderer
+    // Timeline renderer with drag/drop
     function renderTimeline() {
       timeline.innerHTML = "";
       frames.forEach((frame, index) => {
         const wrapper = document.createElement("div");
         wrapper.className = "frame-thumb";
+        wrapper.draggable = true;
         if (index === currentFrame) wrapper.classList.add("selected");
 
         const img = document.createElement("img");
@@ -122,6 +174,27 @@
           currentFrame = index;
           renderTimeline();
         };
+
+        // Drag events
+        wrapper.addEventListener("dragstart", e => {
+          dragSrcIndex = index;
+          wrapper.classList.add("dragging");
+        });
+        wrapper.addEventListener("dragend", e => {
+          wrapper.classList.remove("dragging");
+        });
+        wrapper.addEventListener("dragover", e => {
+          e.preventDefault();
+        });
+        wrapper.addEventListener("drop", e => {
+          e.preventDefault();
+          if (dragSrcIndex !== null && dragSrcIndex !== index) {
+            const movedFrame = frames.splice(dragSrcIndex, 1)[0];
+            frames.splice(index, 0, movedFrame);
+            dragSrcIndex = null;
+            renderTimeline();
+          }
+        });
 
         timeline.appendChild(wrapper);
       });
