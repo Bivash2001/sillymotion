@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Marz's SillyMotion</title>
+  <style>
+    body { font-family: sans-serif; margin: 20px; }
+    #controls { margin: 10px 0; }
+    #timeline { display: flex; overflow-x: auto; border: 1px solid #ccc; padding: 5px; min-height: 100px; }
+    .frame-thumb { margin: 2px; border: 1px solid #999; cursor: pointer; position: relative; }
+    .frame-thumb img { width: 60px; height: 45px; display: block; }
+    .selected { border: 2px solid red; }
+    .frame-actions { display: flex; justify-content: center; margin-top: 2px; }
+    .frame-actions button { font-size: 10px; margin: 0 1px; }
+  </style>
+</head>
+<body>
+  <h1>Marz's SillyMotion</h1>
+  <p><a href="README.txt" target="_blank">📖 Read Me (Instructions & Features)</a></p>
+
+  <div style="display:flex; gap:20px;">
+    <div>
+      <video id="webcam" autoplay playsinline width="320" height="240"></video>
+      <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+    </div>
+    <div>
+      <h3>Playback Preview</h3>
+      <img id="playbackPreview" width="320" height="240" style="border:1px solid #ccc;">
+    </div>
+  </div>
+
+  <div id="controls">
+    <button id="captureBtn">Capture Frame</button>
+    <button id="playBtn">Play</button>
+    <button id="stopBtn">Stop</button>
+    <button id="exportBtn">Export WebM</button>
+    <button id="saveBtn">Save Project (.json)</button>
+    <input type="file" id="loadFile" accept=".json" style="display:none;">
+    <button id="loadBtn">Load Project (.json)</button>
+    <input type="file" id="audioInput" accept="audio/*">
+    <label>
+      FPS:
+      <input type="range" id="fpsSlider" min="1" max="30" value="6">
+      <span id="fpsValue">6</span>
+    </label>
+  </div>
+
+  <audio id="audio" controls></audio>
+  <div id="timeline"></div>
+
+  <script>
+    const video = document.getElementById("webcam");
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const captureBtn = document.getElementById("captureBtn");
+    const playBtn = document.getElementById("playBtn");
+    const stopBtn = document.getElementById("stopBtn");
+    const exportBtn = document.getElementById("exportBtn");
+    const fpsSlider = document.getElementById("fpsSlider");
+    const fpsValue = document.getElementById("fpsValue");
+    const audio = document.getElementById("audio");
+    const audioInput = document.getElementById("audioInput");
+    const timeline = document.getElementById("timeline");
+    const playbackPreview = document.getElementById("playbackPreview");
+
+    const saveBtn = document.getElementById("saveBtn");
+    const loadBtn = document.getElementById("loadBtn");
+    const loadFile = document.getElementById("loadFile");
+
+    let frames = [];
+    let currentFrame = 0;
+    let playing = false;
+    let playInterval = null;
+    let audioFilename = "";
+
+    // Webcam setup
+    navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+      video.srcObject = stream;
+    });
+
+    // FPS slider value display
+    fpsSlider.addEventListener("input", () => {
+      fpsValue.textContent = fpsSlider.value;
+    });
+
+    // Capture frame
+    captureBtn.addEventListener("click", () => {
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const dataURL = canvas.toDataURL();
+      frames.push(dataURL);
+      renderTimeline();
+    });
+
+    // Timeline renderer
+    function renderTimeline() {
+      timeline.innerHTML = "";
+      frames.forEach((frame, index) => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "frame-thumb";
+        if (index === currentFrame) wrapper.classList.add("selected");
+
+        const img = document.createElement("img");
+        img.src = frame;
+        wrapper.appendChild(img);
+
+        const actions = document.createElement("div");
+        actions.className = "frame-actions";
+
+        const dupBtn = document.createElement("button");
+        dupBtn.textContent = "⧉";
+        dupBtn.onclick = () => { frames.splice(index + 1, 0, frame); renderTimeline(); };
+
+        const delBtn = document.createElement("button");
+        delBtn.textContent = "✕";
+        delBtn.onclick = () => { frames.splice(index, 1); if (currentFrame >= frames.length) currentFrame = frames.length - 1; renderTimeline(); };
+
+        actions.appendChild(dupBtn);
+        actions.appendChild(delBtn);
+        wrapper.appendChild(actions);
+
+        wrapper.onclick = () => {
+          currentFrame = index;
+          renderTimeline();
+        };
+
+        timeline.appendChild(wrapper);
+      });
+    }
+
+    // Audio upload
+    audioInput.addEventListener("change", e => {
+      const file = e.target.files[0];
+      if (file) {
+        audioFilename = file.name;
+        audio.src = URL.createObjectURL(file);
+      }
+    });
+
+    // Playback
+    playBtn.addEventListener("click", () => {
+      if (frames.length === 0) return;
+      playing = true;
+      currentFrame = 0;
+      const fps = parseInt(fpsSlider.value);
+      const frameDuration = 1000 / fps;
+
+      audio.currentTime = 0;
+      audio.play();
+
+      playInterval = setInterval(() => {
+        if (currentFrame < frames.length) {
+          playbackPreview.src = frames[currentFrame];
+          document.querySelectorAll(".frame-thumb").forEach((el, i) => {
+            el.classList.toggle("selected", i === currentFrame);
+          });
+          currentFrame++;
+        } else {
+          stopPlayback();
+        }
+      }, frameDuration);
+    });
+
+    stopBtn.addEventListener("click", stopPlayback);
+
+    function stopPlayback() {
+      playing = false;
+      clearInterval(playInterval);
+      audio.pause();
+      audio.currentTime = 0;
+      currentFrame = 0;
+      playbackPreview.src = "";
+      renderTimeline();
+    }
+
+    // Export WebM (silent, single file, no looping)
+    exportBtn.addEventListener("click", () => {
+      if (frames.length === 0) return;
+
+      const fps = parseInt(fpsSlider.value);
+      const exportCanvas = document.createElement("canvas");
+      const exportCtx = exportCanvas.getContext("2d");
+
+      const img0 = new Image();
+      img0.onload = () => {
+        exportCanvas.width = img0.width;
+        exportCanvas.height = img0.height;
+
+        const stream = exportCanvas.captureStream(fps);
+        const recorder = new MediaRecorder(stream, { mimeType: "video/webm" });
+        const chunks = [];
+
+        recorder.ondataavailable = e => chunks.push(e.data);
+        recorder.onstop = () => {
+          const blob = new Blob(chunks, { type: "video/webm" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "animation.webm";
+          a.click();
+        };
+
+        recorder.start();
+
+        let i = 0;
+        const drawFrame = () => {
+          if (i < frames.length) {
+            const img = new Image();
+            img.onload = () => {
+              exportCtx.drawImage(img, 0, 0);
+              i++;
+              setTimeout(drawFrame, 1000 / fps);
+            };
+            img.src = frames[i];
+          } else {
+            recorder.stop();
+          }
+        };
+
+        drawFrame();
+      };
+      img0.src = frames[0];
+    });
+
+    // Save Project (.json)
+    saveBtn.addEventListener("click", () => {
+      if (frames.length === 0) return;
+      const projectData = {
+        frames: frames,
+        fps: parseInt(fpsSlider.value),
+        audio: audioFilename
+      };
+      const blob = new Blob([JSON.stringify(projectData)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "project.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // Load Project (.json)
+    loadBtn.addEventListener("click", () => {
+      loadFile.click();
+    });
+
+    loadFile.addEventListener("change", e => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = event => {
+        try {
+          const projectData = JSON.parse(event.target.result);
+          frames = projectData.frames || [];
+          fpsSlider.value = projectData.fps || 6;
+          fpsValue.textContent = fpsSlider.value;
+          audioFilename = projectData.audio || "";
+          currentFrame = 0;
+          renderTimeline();
+          alert("Project loaded! Remember to re-import your audio file: " + audioFilename);
+        } catch (err) {
+          alert("Invalid project file!");
+        }
+      };
+      reader.readAsText(file);
+    });
+  </script>
+</body>
+</html>
