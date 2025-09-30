@@ -4,15 +4,85 @@
   <meta charset="UTF-8">
   <title>Marz's SillyMotion</title>
   <style>
-    body { font-family: sans-serif; margin: 20px; }
+    body {
+      font-family: sans-serif;
+      margin: 20px;
+      background: #fff;
+      color: #000;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.dark {
+      background: #121212;
+      color: #eee;
+    }
+
     #controls { margin: 10px 0; }
-    #timeline { display: flex; overflow-x: auto; border: 1px solid #ccc; padding: 5px; min-height: 100px; }
-    .frame-thumb { margin: 2px; border: 1px solid #999; cursor: grab; position: relative; }
+
+    #timeline {
+      display: flex;
+      overflow-x: auto;
+      border: 1px solid #ccc;
+      padding: 5px;
+      min-height: 100px;
+    }
+
+    body.dark #timeline {
+      border-color: #444;
+    }
+
+    .frame-thumb {
+      margin: 2px;
+      border: 1px solid #999;
+      cursor: grab;
+      position: relative;
+      background: #f0f0f0;
+    }
+
+    body.dark .frame-thumb {
+      background: #1e1e1e;
+      border-color: #666;
+    }
+
     .frame-thumb.dragging { opacity: 0.5; }
-    .frame-thumb img { width: 60px; height: 45px; display: block; }
+
+    .frame-thumb img {
+      width: 60px;
+      height: 45px;
+      display: block;
+    }
+
     .selected { border: 2px solid red; }
-    .frame-actions { display: flex; justify-content: center; margin-top: 2px; }
-    .frame-actions button { font-size: 10px; margin: 0 1px; }
+
+    .frame-actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 2px;
+    }
+
+    .frame-actions button {
+      font-size: 10px;
+      margin: 0 1px;
+    }
+
+    button, input, select {
+      background: #fff;
+      color: #000;
+      border: 1px solid #aaa;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    body.dark button, 
+    body.dark input, 
+    body.dark select {
+      background: #333;
+      color: #eee;
+      border-color: #666;
+    }
+
+    a { color: #06c; }
+    body.dark a { color: #4af; }
   </style>
 </head>
 <body>
@@ -54,12 +124,18 @@
       <option value="next">Next Frame</option>
       <option value="both">Previous + Next</option>
     </select>
+    <button id="darkToggle">🌙 Toggle Dark Mode</button>
   </div>
 
   <audio id="audio" controls></audio>
   <div id="timeline"></div>
 
   <script>
+    const darkToggle = document.getElementById("darkToggle");
+    darkToggle.addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+  });
+
     const video = document.getElementById("webcam");
     const liveCanvas = document.getElementById("liveCanvas");
     const liveCtx = liveCanvas.getContext("2d");
