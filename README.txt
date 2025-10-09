@@ -1,5 +1,5 @@
 =========================================
-        Marz's SillyMotion v1.2
+        SillyMotion v1.2
 =========================================
 
 Stop-motion made silly and simple! 🎉  
@@ -75,5 +75,37 @@ Created with love and silliness by Marz. 💫
 
 Enjoy making your cartoons silly again!
 
-Marz’s SillyMotion was created by Marz (idea, design, and direction) with coding support from ChatGPT (implementation and technical help).  
+SillyMotion was created by Marz (idea, design, and direction) with coding support from ChatGPT (implementation and technical help).  
 This project is a labor of love to keep cartoon-making fun, free, and accessible to everyone. 🎬✨
+
+
+
+=======================================================
+🎬 Creator’s Statement — Why I Made Marz’s SillyMotion
+=======================================================
+
+Ever since I was a kid, I’ve loved stop motion — especially Aardman’s classics like Wallace & Gromit and Shaun the Sheep. Their style, charm, and humor inspired me to try it myself. But when I wanted to make my own stop motion animations, I hit a wall: every decent program cost money.
+
+Aardman’s own “Animate It!” looked perfect — simple, fun, and made for beginners. But the full version cost £19.95 (and now, with inflation, that’s around £42 today — over 50 U.S. dollars). That’s crazy! You could buy an entire console game for that price!
+
+I just wanted to make silly little clay animations, not a Steven Spielberg movie! But instead of being accessible, most stop motion software was either too expensive or too complicated. And that’s a huge problem — because animation should be a fun hobby, not a luxury.
+
+So, I made my own tool:
+Marz’s SillyMotion.
+
+It’s free. It’s simple. It’s browser-based.
+No installs. No paywalls. No subscriptions.
+Just pure animation fun for anyone — kids, hobbyists, or pros who miss the charm of DIY creativity.
+
+I built this program to prove that animation can be fun, accessible, and open-source all at once.
+I wanted to bring back that old spirit of tinkering — when people made art with what they had, and studios like Aardman were working out of a garage.
+
+I’m proud to say this project balances accessibility and functionality — something the animation world desperately needs again.
+
+If big companies want to treat creativity like a luxury, then fine — we’ll make our own tools.
+SillyMotion is for the dreamers, the hobbyists, and the silly animators who just want to make things move and laugh.
+
+Let’s make cartoons silly again. 💫
+
+— Marz
+Creator, SillyMotion
