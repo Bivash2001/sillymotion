@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Marz's SillyMotion</title>
+  <title>SillyMotion</title>
   <style>
     body {
       font-family: sans-serif;
@@ -15,6 +15,16 @@
     body.dark {
       background: #121212;
       color: #eee;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .logo {
+      width: 700px;
+      max-width: 90%;
     }
 
     #controls { margin: 10px 0; }
@@ -94,8 +104,10 @@
   </style>
 </head>
 <body>
-  <h1>Marz's SillyMotion</h1>
-  <p><a href="README.txt" target="_blank">📖 Read Me (Instructions & Features)</a></p>
+  <header>
+    <img src="logo.png" alt="SillyMotion Logo" class="logo">
+    <p><a href="README.txt" target="_blank">📖 Read Me (Instructions & Features)</a></p>
+  </header>
 
   <div style="display:flex; gap:20px;">
     <div>
@@ -137,13 +149,8 @@
 
   <audio id="audio" controls></audio>
 
-  <!-- FRAME INFO -->
   <div id="frameInfo" style="margin-bottom:5px; font-weight:bold;">Frames: 0 | Current: 0</div>
-
-  <!-- TIMELINE -->
   <div id="timeline"></div>
-
-  <!-- EXPORT MESSAGE BELOW TIMELINE -->
   <div id="exportMessage">Exporting Your Animation! Please Wait!</div>
 
   <script>
@@ -313,10 +320,9 @@
       updateFrameInfo();
     }
 
-    // EXPORT WEBM with text message
     exportBtn.addEventListener("click", () => {
       if (frames.length === 0) return;
-      exportMessage.style.display = "block"; // show message
+      exportMessage.style.display = "block";
 
       const fps = parseInt(fpsSlider.value);
       const exportCanvas = document.createElement("canvas");
