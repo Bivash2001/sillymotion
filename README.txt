@@ -81,7 +81,7 @@ This project is a labor of love to keep cartoon-making fun, free, and accessible
 
 
 =======================================================
-🎬 Creator’s Statement — Why I Made Marz’s SillyMotion
+🎬 Creator’s Statement — Why I Made SillyMotion
 =======================================================
 
 Ever since I was a kid, I’ve loved stop motion — especially Aardman’s classics like Wallace & Gromit and Shaun the Sheep. Their style, charm, and humor inspired me to try it myself. But when I wanted to make my own stop motion animations, I hit a wall: every decent program cost money.
@@ -109,3 +109,4 @@ Let’s make cartoons silly again. 💫
 
 — Marz
 Creator, SillyMotion
+
