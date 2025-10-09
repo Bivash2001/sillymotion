@@ -96,7 +96,7 @@ Aardman’s own “Animate It!” looked perfect — simple, fun, and made for b
 I just wanted to make silly little clay animations, not a Steven Spielberg movie! But instead of being accessible, most stop motion software was either too expensive or too complicated. And that’s a huge problem — because animation should be a fun hobby, not a luxury.
 
 So, I made my own tool:
-Marz’s SillyMotion.
+SillyMotion.
 
 It’s free. It’s simple. It’s browser-based.
 No installs. No paywalls. No subscriptions.
@@ -114,6 +114,7 @@ Let’s make cartoons silly again. 💫
 
 — Marz
 Creator, SillyMotion
+
 
 
 
