@@ -1,5 +1,5 @@
 =========================================
-        SillyMotion v1.2
+              SillyMotion v1.2
 =========================================
 
 Stop-motion made silly and simple! 🎉  
@@ -8,6 +8,7 @@ This is a free browser-based stop motion animation tool created for cartoon love
 -----------------------------------------
    WHAT'S NEW IN v1.2
 -----------------------------------------
+- 🖼️ Logo Added – SillyMotion now displays a new PNG logo at the top of the interface, replacing the old text title.
 - 🖱️ Draggable Frames – Reorder your frames directly in the timeline by dragging and dropping.  
 - 👻 Onion Skinning (Multi-Layer) – Overlay previous and/or next frames on top of your live camera feed to help align movement more precisely.  
 - 🌙 Dark Mode – A sleek dark theme to make animating easier on the eyes.  
@@ -30,6 +31,7 @@ This is a free browser-based stop motion animation tool created for cartoon love
 - Export finished animations as silent WebM videos.
 - Export message below timeline during video export.
 - Simple, fun, and cartoon-inspired design.
+- NEW: PNG logo replaces the text header for a more polished look.
 
 -----------------------------------------
    HOW TO USE
@@ -50,6 +52,7 @@ This is a free browser-based stop motion animation tool created for cartoon love
 11. Use "Save Project" to store your work as a .json file.
 12. Use "Load Project" to continue working later.
 13. Press "Export WebM" to download your animation — a message appears below the timeline while it’s exporting.
+14. Enjoy your new SillyMotion logo greeting you each time you open the app!
 
 -----------------------------------------
    REQUIREMENTS
@@ -57,6 +60,7 @@ This is a free browser-based stop motion animation tool created for cartoon love
 - A modern web browser (Chrome, Firefox, or Edge recommended).
 - A webcam (for capturing frames).
 - Optional: an audio file (MP3, WAV, OGG) for syncing animation.
+- A PNG logo file named “logo.png” in the same folder as this HTML file.
 
 -----------------------------------------
    LIMITATIONS
@@ -77,6 +81,7 @@ Enjoy making your cartoons silly again!
 
 SillyMotion was created by Marz (idea, design, and direction) with coding support from ChatGPT (implementation and technical help).  
 This project is a labor of love to keep cartoon-making fun, free, and accessible to everyone. 🎬✨
+
 
 ______________________________________________________________________________________________________________________________________________________________________________
 
@@ -109,5 +114,6 @@ Let’s make cartoons silly again. 💫
 
 — Marz
 Creator, SillyMotion
+
 
 
