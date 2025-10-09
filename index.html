@@ -83,6 +83,14 @@
 
     a { color: #06c; }
     body.dark a { color: #4af; }
+
+    /* Export message styling */
+    #exportMessage {
+      display: none;
+      font-weight: bold;
+      margin-top: 10px;
+      color: green;
+    }
   </style>
 </head>
 <body>
@@ -128,13 +136,19 @@
   </div>
 
   <audio id="audio" controls></audio>
+
+  <!-- FRAME INFO -->
+  <div id="frameInfo" style="margin-bottom:5px; font-weight:bold;">Frames: 0 | Current: 0</div>
+
+  <!-- TIMELINE -->
   <div id="timeline"></div>
+
+  <!-- EXPORT MESSAGE BELOW TIMELINE -->
+  <div id="exportMessage">Exporting Your Animation! Please Wait!</div>
 
   <script>
     const darkToggle = document.getElementById("darkToggle");
-    darkToggle.addEventListener("click", () => {
-      document.body.classList.toggle("dark");
-  });
+    darkToggle.addEventListener("click", () => document.body.classList.toggle("dark"));
 
     const video = document.getElementById("webcam");
     const liveCanvas = document.getElementById("liveCanvas");
@@ -153,10 +167,11 @@
     const playbackPreview = document.getElementById("playbackPreview");
     const onionSkinToggle = document.getElementById("onionSkin");
     const onionMode = document.getElementById("onionMode");
-
     const saveBtn = document.getElementById("saveBtn");
     const loadBtn = document.getElementById("loadBtn");
     const loadFile = document.getElementById("loadFile");
+    const frameInfo = document.getElementById("frameInfo");
+    const exportMessage = document.getElementById("exportMessage");
 
     let frames = [];
     let currentFrame = 0;
@@ -165,60 +180,53 @@
     let audioFilename = "";
     let dragSrcIndex = null;
 
-    // Webcam setup
     navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
       video.srcObject = stream;
       requestAnimationFrame(drawLive);
     });
 
-// Live camera with onion skin (previous + next)
-function drawLive() {
-  // draw the live webcam feed
-  liveCtx.globalAlpha = 1.0;
-  liveCtx.drawImage(video, 0, 0, liveCanvas.width, liveCanvas.height);
+    function drawLive() {
+      liveCtx.globalAlpha = 1.0;
+      liveCtx.drawImage(video, 0, 0, liveCanvas.width, liveCanvas.height);
 
-  if (onionSkinToggle.checked && frames.length > 0) {
-    const alphaStep = 0.3; // transparency for onion layers
-    const prevIndex = currentFrame - 1;
-    const nextIndex = currentFrame + 1;
+      if (onionSkinToggle.checked && frames.length > 0) {
+        const alphaStep = 0.3;
+        const prevIndex = currentFrame - 1;
+        const nextIndex = currentFrame + 1;
 
-    // draw previous frame (if exists)
-    if (prevIndex >= 0) {
-      const prevImg = new Image();
-      prevImg.src = frames[prevIndex];
-      liveCtx.globalAlpha = alphaStep;
-      liveCtx.drawImage(prevImg, 0, 0, liveCanvas.width, liveCanvas.height);
+        if (prevIndex >= 0) {
+          const prevImg = new Image();
+          prevImg.src = frames[prevIndex];
+          liveCtx.globalAlpha = alphaStep;
+          liveCtx.drawImage(prevImg, 0, 0, liveCanvas.width, liveCanvas.height);
+        }
+        if (nextIndex < frames.length) {
+          const nextImg = new Image();
+          nextImg.src = frames[nextIndex];
+          liveCtx.globalAlpha = alphaStep;
+          liveCtx.drawImage(nextImg, 0, 0, liveCanvas.width, liveCanvas.height);
+        }
+        liveCtx.globalAlpha = 1.0;
+      }
+      requestAnimationFrame(drawLive);
     }
 
-    // draw next frame (if exists)
-    if (nextIndex < frames.length) {
-      const nextImg = new Image();
-      nextImg.src = frames[nextIndex];
-      liveCtx.globalAlpha = alphaStep;
-      liveCtx.drawImage(nextImg, 0, 0, liveCanvas.width, liveCanvas.height);
+    fpsSlider.addEventListener("input", () => { fpsValue.textContent = fpsSlider.value; });
+
+    function updateFrameInfo() {
+      const total = frames.length;
+      const current = frames.length === 0 ? 0 : playing ? Math.min(currentFrame + 1, total) : currentFrame + 1;
+      frameInfo.textContent = `Frames: ${total} | Current: ${current}`;
     }
 
-    liveCtx.globalAlpha = 1.0; // reset
-  }
-
-  requestAnimationFrame(drawLive);
-}
-
-
-    // FPS slider value display
-    fpsSlider.addEventListener("input", () => {
-      fpsValue.textContent = fpsSlider.value;
-    });
-
-    // Capture frame
     captureBtn.addEventListener("click", () => {
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       const dataURL = canvas.toDataURL();
       frames.push(dataURL);
       renderTimeline();
+      updateFrameInfo();
     });
 
-    // Timeline renderer with drag/drop
     function renderTimeline() {
       timeline.innerHTML = "";
       frames.forEach((frame, index) => {
@@ -236,32 +244,21 @@ function drawLive() {
 
         const dupBtn = document.createElement("button");
         dupBtn.textContent = "⧉";
-        dupBtn.onclick = () => { frames.splice(index + 1, 0, frame); renderTimeline(); };
+        dupBtn.onclick = () => { frames.splice(index + 1, 0, frame); renderTimeline(); updateFrameInfo(); };
 
         const delBtn = document.createElement("button");
         delBtn.textContent = "✕";
-        delBtn.onclick = () => { frames.splice(index, 1); if (currentFrame >= frames.length) currentFrame = frames.length - 1; renderTimeline(); };
+        delBtn.onclick = () => { frames.splice(index, 1); if (currentFrame >= frames.length) currentFrame = frames.length - 1; renderTimeline(); updateFrameInfo(); };
 
         actions.appendChild(dupBtn);
         actions.appendChild(delBtn);
         wrapper.appendChild(actions);
 
-        wrapper.onclick = () => {
-          currentFrame = index;
-          renderTimeline();
-        };
+        wrapper.onclick = () => { currentFrame = index; renderTimeline(); updateFrameInfo(); };
 
-        // Drag events
-        wrapper.addEventListener("dragstart", e => {
-          dragSrcIndex = index;
-          wrapper.classList.add("dragging");
-        });
-        wrapper.addEventListener("dragend", e => {
-          wrapper.classList.remove("dragging");
-        });
-        wrapper.addEventListener("dragover", e => {
-          e.preventDefault();
-        });
+        wrapper.addEventListener("dragstart", e => { dragSrcIndex = index; wrapper.classList.add("dragging"); });
+        wrapper.addEventListener("dragend", e => { wrapper.classList.remove("dragging"); });
+        wrapper.addEventListener("dragover", e => e.preventDefault());
         wrapper.addEventListener("drop", e => {
           e.preventDefault();
           if (dragSrcIndex !== null && dragSrcIndex !== index) {
@@ -269,23 +266,20 @@ function drawLive() {
             frames.splice(index, 0, movedFrame);
             dragSrcIndex = null;
             renderTimeline();
+            updateFrameInfo();
           }
         });
 
         timeline.appendChild(wrapper);
       });
+      updateFrameInfo();
     }
 
-    // Audio upload
     audioInput.addEventListener("change", e => {
       const file = e.target.files[0];
-      if (file) {
-        audioFilename = file.name;
-        audio.src = URL.createObjectURL(file);
-      }
+      if (file) { audioFilename = file.name; audio.src = URL.createObjectURL(file); }
     });
 
-    // Playback
     playBtn.addEventListener("click", () => {
       if (frames.length === 0) return;
       playing = true;
@@ -299,13 +293,10 @@ function drawLive() {
       playInterval = setInterval(() => {
         if (currentFrame < frames.length) {
           playbackPreview.src = frames[currentFrame];
-          document.querySelectorAll(".frame-thumb").forEach((el, i) => {
-            el.classList.toggle("selected", i === currentFrame);
-          });
+          document.querySelectorAll(".frame-thumb").forEach((el, i) => el.classList.toggle("selected", i === currentFrame));
+          updateFrameInfo();
           currentFrame++;
-        } else {
-          stopPlayback();
-        }
+        } else { stopPlayback(); }
       }, frameDuration);
     });
 
@@ -319,11 +310,13 @@ function drawLive() {
       currentFrame = 0;
       playbackPreview.src = "";
       renderTimeline();
+      updateFrameInfo();
     }
 
-    // Export WebM (silent, single file, no looping)
+    // EXPORT WEBM with text message
     exportBtn.addEventListener("click", () => {
       if (frames.length === 0) return;
+      exportMessage.style.display = "block"; // show message
 
       const fps = parseInt(fpsSlider.value);
       const exportCanvas = document.createElement("canvas");
@@ -346,6 +339,7 @@ function drawLive() {
           a.href = url;
           a.download = "animation.webm";
           a.click();
+          setTimeout(() => { exportMessage.style.display = "none"; }, 100);
         };
 
         recorder.start();
@@ -360,24 +354,16 @@ function drawLive() {
               setTimeout(drawFrame, 1000 / fps);
             };
             img.src = frames[i];
-          } else {
-            recorder.stop();
-          }
+          } else { recorder.stop(); }
         };
-
         drawFrame();
       };
       img0.src = frames[0];
     });
 
-    // Save Project (.json)
     saveBtn.addEventListener("click", () => {
       if (frames.length === 0) return;
-      const projectData = {
-        frames: frames,
-        fps: parseInt(fpsSlider.value),
-        audio: audioFilename
-      };
+      const projectData = { frames, fps: parseInt(fpsSlider.value), audio: audioFilename };
       const blob = new Blob([JSON.stringify(projectData)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -387,15 +373,10 @@ function drawLive() {
       URL.revokeObjectURL(url);
     });
 
-    // Load Project (.json)
-    loadBtn.addEventListener("click", () => {
-      loadFile.click();
-    });
-
+    loadBtn.addEventListener("click", () => loadFile.click());
     loadFile.addEventListener("change", e => {
       const file = e.target.files[0];
       if (!file) return;
-
       const reader = new FileReader();
       reader.onload = event => {
         try {
@@ -406,10 +387,9 @@ function drawLive() {
           audioFilename = projectData.audio || "";
           currentFrame = 0;
           renderTimeline();
+          updateFrameInfo();
           alert("Project loaded! Remember to re-import your audio file: " + audioFilename);
-        } catch (err) {
-          alert("Invalid project file!");
-        }
+        } catch { alert("Invalid project file!"); }
       };
       reader.readAsText(file);
     });
