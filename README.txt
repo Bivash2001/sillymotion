@@ -2,7 +2,7 @@
               SillyMotion v1.2
 =========================================
 
-Stop-motion made silly and simple! 🎉  
+Animation Made Silly and Simple! 🎉  
 This is a free browser-based stop motion animation tool created for cartoon lovers, hobbyists, and anyone who wants to make frame-by-frame animations without complicated software or expensive subscriptions.
 
 -----------------------------------------
@@ -114,6 +114,7 @@ Let’s make cartoons silly again. 💫
 
 — Marz
 Creator, SillyMotion
+
 
 
 
