@@ -109,18 +109,32 @@
     <p><a href="README.txt" target="_blank">📖 Read Me (Instructions & Features)</a></p>
   </header>
 
-  <div style="display:flex; gap:20px;">
-    <div>
-      <h3>Camera Feed (Be Sure to Grab a Webcam)</h3>
-      <canvas id="liveCanvas" width="320" height="240" style="border:1px solid #ccc;"></canvas>
-      <video id="webcam" autoplay playsinline width="320" height="240" style="display:none;"></video>
-      <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
-    </div>
-    <div>
-      <h3>Playback Preview</h3>
-      <img id="playbackPreview" width="320" height="240" style="border:1px solid #ccc;">
-    </div>
+  <div style="display:flex; gap:20px; flex-wrap:wrap;">
+  <div>
+    <h3>Camera Feed (Be Sure to Grab a Webcam)</h3>
+    <canvas id="liveCanvas" width="320" height="240" style="border:1px solid #ccc;"></canvas>
+    <video id="webcam" autoplay playsinline width="320" height="240" style="display:none;"></video>
+    <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
   </div>
+
+  <div>
+    <h3>Playback Preview</h3>
+    <img id="playbackPreview" width="320" height="240" style="border:1px solid #ccc;">
+  </div>
+
+  <div>
+    <h3>Demo</h3>
+    <!-- Replace VIDEO_ID with your YouTube video ID -->
+    <iframe 
+      width="640" 
+      height="360" 
+      src="https://www.youtube.com/embed/m3WjCsxfhnc" 
+      title="SillyMotion Demo"
+      frameborder="0" 
+      allowfullscreen>
+    </iframe>
+  </div>
+</div>
 
   <div id="controls">
     <button id="captureBtn">Capture Frame</button>
