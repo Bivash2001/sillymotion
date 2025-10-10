@@ -1,13 +1,14 @@
 =========================================
-              SillyMotion v1.2
+              SillyMotion v1.3 
 =========================================
 
 Animation Made Silly and Simple! 🎉  
 This is a free browser-based stop motion animation tool created for cartoon lovers, hobbyists, and anyone who wants to make frame-by-frame animations without complicated software or expensive subscriptions.
 
 -----------------------------------------
-   WHAT'S NEW IN v1.2
+   WHAT'S NEW IN v1.3
 -----------------------------------------
+- 🎥 **Demo Video Added** – A new “Demo” section has been added to the interface! It embeds the official SillyMotion YouTube video directly in the app, featuring tutorials, requirements, and other niche info about how to get the most out of SillyMotion.  
 - 🖼️ Logo Added – SillyMotion now displays a new PNG logo at the top of the interface, replacing the old text title.
 - 🖱️ Draggable Frames – Reorder your frames directly in the timeline by dragging and dropping.  
 - 👻 Onion Skinning (Multi-Layer) – Overlay previous and/or next frames on top of your live camera feed to help align movement more precisely.  
@@ -15,6 +16,7 @@ This is a free browser-based stop motion animation tool created for cartoon love
 - 📊 Frame Info Display – Shows total frames and the currently selected frame above the timeline.  
 - ⏳ Export Message – When exporting a WebM video, a message appears below the timeline: "Exporting Your Animation! Please Wait!"  
 - ⚡ General improvements and bug fixes to keep animations smooth and easy.  
+
 
 -----------------------------------------
    FEATURES
@@ -114,6 +116,7 @@ Let’s make cartoons silly again. 💫
 
 — Marz
 Creator, SillyMotion
+
 
 
 
