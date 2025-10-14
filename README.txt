@@ -118,6 +118,9 @@ Let’s make cartoons silly again. 💫
 Creator, SillyMotion
 
 
+This project includes JS Paint (https://github.com/1j01/jspaint)  
+Licensed under the MIT License. All original copyright and license information is preserved.
+
 
 
 
