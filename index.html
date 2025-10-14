@@ -107,34 +107,41 @@
   <header>
     <img src="logo.png" alt="SillyMotion Logo" class="logo">
     <p><a href="README.txt" target="_blank">📖 Read Me (Instructions & Features)</a></p>
+<button onclick="openJSPaint()">Wanna Draw Some Scenes? Open JS Paint!</button>
+
+    <script>
+        function openJSPaint() {
+            // Open JS Paint in a new window
+            window.open('jspaint-1.0.0-beta.1/index.html', '_blank');
+        }
+    </script>
   </header>
 
   <div style="display:flex; gap:20px; flex-wrap:wrap;">
-  <div>
-    <h3>Camera Feed (Be Sure to Grab a Webcam)</h3>
-    <canvas id="liveCanvas" width="320" height="240" style="border:1px solid #ccc;"></canvas>
-    <video id="webcam" autoplay playsinline width="320" height="240" style="display:none;"></video>
-    <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
-  </div>
+    <div>
+      <h3>Camera Feed (Be Sure to Grab a Webcam)</h3>
+      <canvas id="liveCanvas" width="320" height="240" style="border:1px solid #ccc;"></canvas>
+      <video id="webcam" autoplay playsinline width="320" height="240" style="display:none;"></video>
+      <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+    </div>
 
-  <div>
-    <h3>Playback Preview</h3>
-    <img id="playbackPreview" width="320" height="240" style="border:1px solid #ccc;">
-  </div>
+    <div>
+      <h3>Playback Preview</h3>
+      <img id="playbackPreview" width="320" height="240" style="border:1px solid #ccc;">
+    </div>
 
-  <div>
-    <h3>Demo</h3>
-    <!-- Replace VIDEO_ID with your YouTube video ID -->
-    <iframe 
-      width="480" 
-      height="270" 
-      src="https://www.youtube.com/embed/m3WjCsxfhnc" 
-      title="SillyMotion Demo"
-      frameborder="0" 
-      allowfullscreen>
-    </iframe>
+    <div>
+      <h3>Demo</h3>
+      <iframe 
+        width="480" 
+        height="270" 
+        src="https://www.youtube.com/embed/m3WjCsxfhnc" 
+        title="SillyMotion Demo"
+        frameborder="0" 
+        allowfullscreen>
+      </iframe>
+    </div>
   </div>
-</div>
 
   <div id="controls">
     <button id="captureBtn">Capture Frame</button>
@@ -159,6 +166,10 @@
       <option value="both">Previous + Next</option>
     </select>
     <button id="darkToggle">🌙 Toggle Dark Mode</button>
+
+    <!-- New image import button -->
+    <input type="file" id="importImages" accept="image/*" multiple style="display:none;">
+    <button id="importBtn">Import Images as Frames</button>
   </div>
 
   <audio id="audio" controls></audio>
@@ -193,6 +204,10 @@
     const loadFile = document.getElementById("loadFile");
     const frameInfo = document.getElementById("frameInfo");
     const exportMessage = document.getElementById("exportMessage");
+
+    // New image import elements
+    const importBtn = document.getElementById("importBtn");
+    const importImages = document.getElementById("importImages");
 
     let frames = [];
     let currentFrame = 0;
@@ -246,6 +261,26 @@
       frames.push(dataURL);
       renderTimeline();
       updateFrameInfo();
+    });
+
+    // Image import logic
+    importBtn.addEventListener("click", () => importImages.click());
+
+    importImages.addEventListener("change", e => {
+      const files = Array.from(e.target.files);
+      if (files.length === 0) return;
+
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = event => {
+          frames.push(event.target.result);
+          renderTimeline();
+          updateFrameInfo();
+        };
+        reader.readAsDataURL(file);
+      });
+
+      importImages.value = "";
     });
 
     function renderTimeline() {
@@ -335,51 +370,57 @@
     }
 
     exportBtn.addEventListener("click", () => {
-      if (frames.length === 0) return;
-      exportMessage.style.display = "block";
+  if (frames.length === 0) return;
+  exportMessage.style.display = "block";
 
-      const fps = parseInt(fpsSlider.value);
-      const exportCanvas = document.createElement("canvas");
-      const exportCtx = exportCanvas.getContext("2d");
+  const fps = parseInt(fpsSlider.value);
+  const exportCanvas = document.createElement("canvas");
+  const exportCtx = exportCanvas.getContext("2d");
 
-      const img0 = new Image();
-      img0.onload = () => {
-        exportCanvas.width = img0.width;
-        exportCanvas.height = img0.height;
+  const img0 = new Image();
+  img0.onload = () => {
+    exportCanvas.width = img0.width;
+    exportCanvas.height = img0.height;
 
-        const stream = exportCanvas.captureStream(fps);
-        const recorder = new MediaRecorder(stream, { mimeType: "video/webm" });
-        const chunks = [];
+    const stream = exportCanvas.captureStream(fps);
+    const recorder = new MediaRecorder(stream, { mimeType: "video/webm" });
+    const chunks = [];
 
-        recorder.ondataavailable = e => chunks.push(e.data);
-        recorder.onstop = () => {
-          const blob = new Blob(chunks, { type: "video/webm" });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = "animation.webm";
-          a.click();
-          setTimeout(() => { exportMessage.style.display = "none"; }, 100);
-        };
+    recorder.ondataavailable = e => chunks.push(e.data);
+    recorder.onstop = () => {
+      const blob = new Blob(chunks, { type: "video/webm" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "animation.webm";
+      a.click();
+      setTimeout(() => { exportMessage.style.display = "none"; }, 100);
+    };
 
-        recorder.start();
+    recorder.start();
 
-        let i = 0;
-        const drawFrame = () => {
-          if (i < frames.length) {
-            const img = new Image();
-            img.onload = () => {
-              exportCtx.drawImage(img, 0, 0);
-              i++;
-              setTimeout(drawFrame, 1000 / fps);
-            };
-            img.src = frames[i];
-          } else { recorder.stop(); }
-        };
-        drawFrame();
+    let i = 0;
+    const drawFrame = () => {
+      if (i >= frames.length) {
+        recorder.stop();
+        return;
+      }
+
+      const img = new Image();
+      img.onload = () => {
+        exportCtx.clearRect(0, 0, exportCanvas.width, exportCanvas.height);
+        exportCtx.drawImage(img, 0, 0);
+        i++;
+        setTimeout(drawFrame, 1000 / fps);
       };
-      img0.src = frames[0];
-    });
+      img.src = frames[i];
+    };
+
+    drawFrame();
+  };
+  img0.src = frames[0];
+});
+
 
     saveBtn.addEventListener("click", () => {
       if (frames.length === 0) return;
